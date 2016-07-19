@@ -1,0 +1,36 @@
+version: "2"
+
+services:
+  # See https://registry.hub.docker.com/_/php/
+  php:
+    container_name: php
+    build: ./php
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../..:/host
+    networks:
+      - internal
+    command: bash -c "php -S 0.0.0.0:8080 -t src"
+  # See https://registry.hub.docker.com/_/mysql/
+  mysql:
+    container_name: mysql
+    build: ./mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+    networks:
+      - internal
+  # See https://registry.hub.docker.com/_/redis/
+  redis:
+    container_name: redis
+    image: redis:3.0.7-alpine
+    networks:
+      - internal
+  memcached:
+    container_name: memcached
+    image: memcached:1.4.28-alpine
+    networks:
+      - internal
+networks:
+  internal:
+    driver: bridge
